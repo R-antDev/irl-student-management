@@ -1,8 +1,17 @@
 import Pagination from "@/Components/Pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 
 export default function Index({ auth, students }) {
+
+    function deleteStudent(id) {
+        if (confirm("Are you sure you want to delete this student?")) {
+            router.delete(route("students.destroy", id), {
+                preserveScroll: true
+            });
+        }
+    }
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -117,7 +126,7 @@ export default function Index({ auth, students }) {
                                                                     >
                                                                         Edit
                                                                     </Link>
-                                                                    <button className="ml-2 text-rose-600 hover:text-rose-900">
+                                                                    <button onClick={() => deleteStudent(student.id)} className="ml-2 text-rose-600 hover:text-rose-900">
                                                                         Delete
                                                                     </button>
                                                                 </td>
