@@ -11,15 +11,16 @@ use App\Http\Resources\StudentResource;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 
-
 class StudentController extends Controller
 {
-    //
-    public function index(){
-        $students = Student::paginate(10);
-
+    public function index(Request $request){
+        $students = Student::search($request)->paginate(10);
+        $classes = ClassResource::collection(Classes::all());
         return Inertia::render('Student/Index', [
-            'students' => StudentResource::collection($students)
+            'students' => StudentResource::collection($students),
+            'classes' => $classes,
+            'class_id' => $request->class_id ?? '',
+            'search' => $request->search ?? ''
         ]);
     }
 

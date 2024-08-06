@@ -15,11 +15,19 @@ class UserSeeder extends Seeder
     {
         //
         $users = [
-            'name' => 'Admin',
-            'email' => 'admin@mail.com',
-            'password' => bcrypt('password'),
+            [
+                'name' => 'Admin',
+                'email' => 'admin@mail.com',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now()
+            ],
+            [
+                'name' => 'User',
+                'email' => 'user@mail.com',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now()
+            ]
         ];
-
         User::insert($users);
     }
 }
