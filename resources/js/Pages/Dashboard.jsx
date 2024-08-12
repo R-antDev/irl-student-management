@@ -15,7 +15,7 @@ export default function Dashboard({ auth, totalStudents, totalClasses }) {
 
             <div className="py-12">
                 <div className=" flex space-x-6 justify-center sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg w-44 h-40">
+                    <div className="bg-teal-300 overflow-hidden shadow-sm sm:rounded-lg w-44 h-40">
                         <div className="p-6 text-gray-900 flex flex-col justify-center h-full">
                             <p className="text-lg">Total Students</p>
                             <p className="text-3xl font-bold">
@@ -23,7 +23,7 @@ export default function Dashboard({ auth, totalStudents, totalClasses }) {
                             </p>
                         </div>
                     </div>
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg w-44 h-40">
+                    <div className="bg-purple-300 overflow-hidden shadow-sm sm:rounded-lg w-44 h-40">
                         <div className="p-6 text-gray-900 flex flex-col justify-center h-full">
                             <p className="text-lg">Total Class</p>
                             <p className="text-3xl font-bold">
