@@ -8,21 +8,22 @@ export default function Index({ auth, students, classes }) {
     const [searchTerm, setSearchTerm] = useState(usePage().props.search || "");
     const [inputValue, setInputValue] = useState(usePage().props.search || "");
     const [pageNumber, setPageNumber] = useState("");
-    const [classId, setClassId] = useState(usePage().props.class_id ||'');
+    const [classId, setClassId] = useState(usePage().props.class_id || "");
 
     const isInitialRender = useRef(true);
 
+    const page = usePage();
+
     const updatedPageNumber = (link) => {
-        setPageNumber(link.url.split('=')[1]);
-        
+        setPageNumber(link.url.split("=")[1]);
     };
 
     let studentsURL = useMemo(() => {
         const url = new URL(route("students.index"));
-        url.searchParams.append('page', pageNumber);
+        url.searchParams.append("page", pageNumber);
 
         if (classId) {
-            url.searchParams.append('class_id', classId)
+            url.searchParams.append("class_id", classId);
         }
 
         if (searchTerm) {
@@ -30,7 +31,7 @@ export default function Index({ auth, students, classes }) {
         }
         return url.href;
     }, [searchTerm, pageNumber, classId]);
-    
+
     useEffect(() => {
         if (isInitialRender.current) {
             isInitialRender.current = false;
@@ -40,24 +41,21 @@ export default function Index({ auth, students, classes }) {
             preserveScroll: true,
             preserveState: true,
             // replace: true,
-        })
+        });
     }, [studentsURL]);
 
     useEffect(() => {
-
         if (inputValue.length == 0) {
             return;
         }
 
         const handler = setTimeout(() => {
             setSearchTerm(inputValue);
-            setPageNumber('1')
-        }, 2000)
-        
-        return () => clearTimeout(handler)
-      
-    }, [inputValue])
-    
+            setPageNumber("1");
+        }, 2000);
+
+        return () => clearTimeout(handler);
+    }, [inputValue]);
 
     function deleteStudent(id) {
         if (confirm("Are you sure you want to delete this student?")) {
@@ -92,12 +90,14 @@ export default function Index({ auth, students, classes }) {
                             </div>
 
                             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                                <Link
-                                    href={route("students.create")}
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                >
-                                    Add Student
-                                </Link>
+                                {page.props.can.student_create && (
+                                    <Link
+                                        href={route("students.create")}
+                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                    >
+                                        Add Student
+                                    </Link>
+                                )}
                             </div>
                         </div>
 
@@ -228,25 +228,32 @@ export default function Index({ auth, students, classes }) {
                                                                 </td>
 
                                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                                    <Link
-                                                                        href={route(
-                                                                            "students.edit",
-                                                                            student.id
-                                                                        )}
-                                                                        className="text-indigo-600 hover:text-indigo-900"
-                                                                    >
-                                                                        Edit
-                                                                    </Link>
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            deleteStudent(
+                                                                    {page.props
+                                                                        .can
+                                                                        .student_edit && (
+                                                                        <Link
+                                                                            href={route(
+                                                                                "students.edit",
                                                                                 student.id
-                                                                            )
-                                                                        }
-                                                                        className="ml-2 text-rose-600 hover:text-rose-900"
-                                                                    >
-                                                                        Delete
-                                                                    </button>
+                                                                            )}
+                                                                            className="text-indigo-600 hover:text-indigo-900"
+                                                                        >
+                                                                            Edit
+                                                                        </Link>
+                                                                    )}
+                                                                    {
+                                                                        page.props.can.student_delete &&
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                deleteStudent(
+                                                                                    student.id
+                                                                                )
+                                                                            }
+                                                                            className="ml-2 text-rose-600 hover:text-rose-900"
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                    }
                                                                 </td>
                                                             </tr>
                                                         );
@@ -256,7 +263,12 @@ export default function Index({ auth, students, classes }) {
                                         </table>
                                     </div>
                                     <div>
-                                        <Pagination meta={students.meta} updatedPageNumber={ updatedPageNumber } />
+                                        <Pagination
+                                            meta={students.meta}
+                                            updatedPageNumber={
+                                                updatedPageNumber
+                                            }
+                                        />
                                     </div>
                                 </div>
                             </div>
